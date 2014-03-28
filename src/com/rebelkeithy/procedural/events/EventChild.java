@@ -18,6 +18,7 @@ public class EventChild extends Event
 	{
 		Person child = eventManager.pgen.createChild(father, mother);
 		eventManager.town.addPerson(child);
+		mother.setPregnant(false);
 		
 		involved.add(father);
 		involved.add(mother);

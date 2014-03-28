@@ -76,4 +76,17 @@ public class EventManager
 	{
 		eventQueue.add(new DelayedEvent(event, event.date));
 	}
+
+	public void newPerson() 
+	{
+		Event event = new EventNewPerson(this, Calendar.instance().getDate());
+		event.apply();
+		log.addEvent(event);
+	}
+
+	public void makePregnant(Person father, Person mother) {
+		Event event = new EventPregnant(this, Calendar.instance().getDate(), father, mother);
+		event.apply();
+		log.addEvent(event);
+	}
 }

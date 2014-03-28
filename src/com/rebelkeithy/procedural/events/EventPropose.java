@@ -25,8 +25,9 @@ public class EventPropose extends Event
 		{
 			man.relations.get(Relationship.Fiance).add(woman);
 			woman.relations.get(Relationship.Fiance).add(man);
-			note = man.fullName() + " proposed to " + woman.fullName() + ", they are now engaged";
+			note = man.fullName() + " (age: " + man.ageYears() + ") proposed to " + woman.fullName() + " (age: " + woman.ageYears() + ") , they are now engaged";
 			note += " (attraction guy->girl: " + man.attractionTo(woman) + ", girl->guy: " + woman.attractionTo(man) + ")"; 
+			note += " (ageDiff = " + man.ageDiff(woman) + ")";
 			int marriageDate = Calendar.instance().getDate() + (int)(80 + Math.random() * 20);
 			eventManager.addDelayedEvent(new EventMarriage(eventManager, marriageDate, man, woman));
 		}

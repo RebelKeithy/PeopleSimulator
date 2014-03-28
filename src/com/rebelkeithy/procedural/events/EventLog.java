@@ -24,7 +24,10 @@ public class EventLog
 	{
 		for(Event event : events)
 		{
-			System.out.println(Utils.formatDate(event.date) + ": " + event.note);
+			if(event.note != null)
+				System.out.println(Utils.formatDate(event.date) + ": " + event.note);
+			else
+				System.out.println(Utils.formatDate(event.date) + ": Event " + event + " is missing note");
 		}
 	}
 
@@ -33,7 +36,12 @@ public class EventLog
 		for(Event event : events)
 		{
 			if(event.involved.contains(person))
-				System.out.println(Utils.formatDate(event.date) + ": " + event.note);
+			{
+				if(event.note != null)
+					System.out.println(Utils.formatDate(event.date) + ": " + event.note);
+				else
+					System.out.println(Utils.formatDate(event.date) + ": Event " + event + " is missing note");
+			}
 		}
 	}
 }

@@ -52,9 +52,10 @@ public class Town
 				}
 			}
 			
-			if(rand.nextDouble() > 0.999 && person.gender == 'F' && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0)
+			if(rand.nextDouble() > 0.999 && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0)
 			{
-				eventManager.haveChild(person.relations.get(Relationship.Spouse).get(0), person);
+				eventManager.makePregnant(person.relations.get(Relationship.Spouse).get(0), person);
+				//eventManager.haveChild(person.relations.get(Relationship.Spouse).get(0), person);
 			}
 			
 			if(person.ageYears() > 65 && (rand.nextDouble()) > 0.9999)
@@ -62,6 +63,11 @@ public class Town
 				eventManager.death(person);
 				i--;
 			}
+		}
+		
+		if(rand.nextDouble() < 1/365.0)
+		{
+			eventManager.newPerson();
 		}
 	}
 	

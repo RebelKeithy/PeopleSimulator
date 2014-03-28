@@ -22,6 +22,8 @@ public class Person
 	public Genome attractiveness;
 	public Genome attraction;
 	
+	public boolean pregnant;
+	
 	public Map<Relationship, List<Person>> relations;
 	public Map<Person, Integer> friendships;
 	
@@ -66,12 +68,30 @@ public class Person
 		
 		float baseAttraction = (value1 + value2 + value3);
 		
-		baseAttraction -= Math.pow((3*(birthDate - person.birthDate))/((birthDate + person.birthDate)/2), 2);
+		baseAttraction -= Math.pow((3*(ageYears() - person.ageYears()))/((ageYears() + person.ageYears())/2.0), 2);
 		
 		if(friendships.containsKey(person))
 			baseAttraction += friendships.get(person);
 		
 		return baseAttraction;
+	}
+	
+	public void setPregnant(boolean pregnant)
+	{
+		if(gender == 'M')
+			return;
+		
+		this.pregnant = pregnant;
+	}
+	
+	public boolean isPregnant()
+	{
+		return pregnant && gender == 'F';
+	}
+	
+	public double ageDiff(Person person)
+	{
+		return Math.pow((3*(ageYears() - person.ageYears()))/((ageYears() + person.ageYears())/2.0), 2);
 	}
 	
 	@Override
