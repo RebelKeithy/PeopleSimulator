@@ -7,12 +7,17 @@ import com.rebelkeithy.procedural.person.Relationship;
 
 public class EventMarriage extends Event
 {
-	public EventMarriage(int date) 
+	private Person husband;
+	private Person wife;
+	
+	public EventMarriage(EventManager eventManager, int date, Person husband, Person wife) 
 	{
-		super(date);
+		super(eventManager, date);
+		this.husband = husband;
+		this.wife = wife;
 	}
 
-	public void apply(Person husband, Person wife)
+	public void apply()
 	{
 		involved.add(husband);
 		involved.add(wife);

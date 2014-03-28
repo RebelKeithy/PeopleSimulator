@@ -1,20 +1,21 @@
 package com.rebelkeithy.procedural.events;
 
 import com.rebelkeithy.procedural.Calendar;
-import com.rebelkeithy.procedural.Town;
 import com.rebelkeithy.procedural.person.Person;
 
 public class EventDeath extends Event
 {
+	Person person;
 
-	public EventDeath(int date) 
+	public EventDeath(EventManager eventManager, int date, Person person) 
 	{
-		super(date);
+		super(eventManager, date);
+		this.person = person;
 	}
 	
-	public void apply(Town town, Person person)
+	public void apply()
 	{
-		town.removePerson(person);
+		eventManager.town.removePerson(person);
 		
 		involved.add(person);
 		this.note = person.fullName() + " died at the age of " + ((Calendar.instance().getDate() - person.birthDate)/365);

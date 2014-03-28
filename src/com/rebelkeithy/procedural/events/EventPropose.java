@@ -1,17 +1,22 @@
 package com.rebelkeithy.procedural.events;
 
+import com.rebelkeithy.procedural.Calendar;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.Relationship;
 
 public class EventPropose extends Event
 {
+	private Person man;
+	private Person woman;
 
-	public EventPropose(int date) 
+	public EventPropose(EventManager eventManager, int date, Person man, Person woman) 
 	{
-		super(date);
+		super(eventManager, date);
+		this.man = man;
+		this.woman = woman;
 	}
 
-	public void apply(Person man, Person woman)
+	public void apply()
 	{
 		involved.add(man);
 		involved.add(woman);
@@ -22,6 +27,8 @@ public class EventPropose extends Event
 			woman.relations.get(Relationship.Fiance).add(man);
 			note = man.fullName() + " proposed to " + woman.fullName() + ", they are now engaged";
 			note += " (attraction guy->girl: " + man.attractionTo(woman) + ", girl->guy: " + woman.attractionTo(man) + ")"; 
+			int marriageDate = Calendar.instance().getDate() + (int)(80 + Math.random() * 20);
+			eventManager.addDelayedEvent(new EventMarriage(eventManager, marriageDate, man, woman));
 		}
 		else
 		{

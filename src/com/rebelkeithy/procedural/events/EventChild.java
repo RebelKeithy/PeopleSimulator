@@ -1,20 +1,23 @@
 package com.rebelkeithy.procedural.events;
 
-import com.rebelkeithy.procedural.Town;
 import com.rebelkeithy.procedural.person.Person;
-import com.rebelkeithy.procedural.person.PersonGenerator;
 
 public class EventChild extends Event 
 {
-	public EventChild(int date) 
+	private Person father;
+	private Person mother;
+	
+	public EventChild(EventManager eventManager, int date, Person father, Person mother) 
 	{
-		super(date);
+		super(eventManager, date);
+		this.father = father;
+		this.mother = mother;
 	}
 	
-	public void apply(Town town, PersonGenerator pgen, Person father, Person mother)
+	public void apply()
 	{
-		Person child = pgen.createChild(father, mother);
-		town.addPerson(child);
+		Person child = eventManager.pgen.createChild(father, mother);
+		eventManager.town.addPerson(child);
 		
 		involved.add(father);
 		involved.add(mother);

@@ -25,18 +25,20 @@ public class Town
 	
 	public void timeStep(int days)
 	{
+		eventManager.timeStep();
+		
 		for(int i = 0; i < people.size(); i++)
 		{
 			Person person = people.get(i);
 			
 			if(Math.random() < 1/80f && person.gender == 'M' && person.relations.get(Relationship.Fiance).size() > 0)
 			{
-				eventManager.marry(person, person.relations.get(Relationship.Fiance).get(0));
+				//eventManager.marry(person, person.relations.get(Relationship.Fiance).get(0));
 			}
 			
 			if(person.ageYears() >= 18 && person.gender == 'M')
 			{
-				if(rand.nextDouble() > 0.9 && person.relations.get(Relationship.Spouse).size() == 0 && person.relations.get(Relationship.Fiance).size() == 0)
+				if(rand.nextDouble() > 0.95 && person.relations.get(Relationship.Spouse).size() == 0 && person.relations.get(Relationship.Fiance).size() == 0)
 				{
 					int j = rand.nextInt(people.size());
 					Person canidate = people.get(j);
@@ -55,7 +57,7 @@ public class Town
 				eventManager.haveChild(person.relations.get(Relationship.Spouse).get(0), person);
 			}
 			
-			if(person.ageYears() > 65 && (person.ageYears()/20.0 + rand.nextDouble()) > 0.9999)
+			if(person.ageYears() > 65 && (rand.nextDouble()) > 0.9999)
 			{
 				eventManager.death(person);
 				i--;

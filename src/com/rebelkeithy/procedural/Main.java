@@ -46,7 +46,7 @@ public class Main
 		}
 
 		Calendar.instance().advance((int) (365*(16 + Math.random() * 10)));
-		for(int i = 0; i < 365 * 100; i++)
+		for(int i = 0; i < 365 * 70; i++)
 		{
 			if(i % 365 == 0)
 				System.out.println("Year: " + i/365);
@@ -56,7 +56,7 @@ public class Main
 		
 		//town.printPeople();
 
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 20; i++)
 		{
 			System.out.println(initialPeople[i]);
 		}
@@ -66,6 +66,9 @@ public class Main
 		System.out.println("Male: " + town.population('M'));
 		System.out.println("Female: " + town.population('F'));
 		
+		System.out.println();
+		System.out.println("Event Log of " + initialPeople[0].fullName());
+		eventManager.printLogRelatingTo(initialPeople[0]);
 		/*
 		father.addRelation(Relationship.Spouse, mother);
 		mother.addRelation(Relationship.Spouse, father);
