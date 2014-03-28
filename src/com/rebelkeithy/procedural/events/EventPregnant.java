@@ -25,6 +25,7 @@ public class EventPregnant extends Event
 		
 		Random rand = new Random();
 		int birthDate = Calendar.instance().getDate() + 58 + (int)(rand.nextGaussian() * 10);
+		
 		eventManager.addDelayedEvent(new EventChild(eventManager, birthDate, father, mother));
 		
 		note = mother.fullName() + " became pregnant";

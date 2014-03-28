@@ -44,6 +44,12 @@ public class EventManager
 		log.printLogRelatingTo(person);
 	}
 	
+	public void preformEvent(Event event)
+	{
+		event.apply();
+		log.addEvent(event);
+	}
+	
 	public void propose(Person man, Person woman)
 	{
 		EventPropose event = new EventPropose(this, Calendar.instance().getDate(), man, woman);

@@ -1,6 +1,8 @@
 package com.rebelkeithy.procedural;
 
+import com.rebelkeithy.procedural.events.EventFactory;
 import com.rebelkeithy.procedural.events.EventManager;
+import com.rebelkeithy.procedural.events.EventType;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.Relationship;
 
@@ -31,11 +33,6 @@ public class Town
 		{
 			Person person = people.get(i);
 			
-			if(Math.random() < 1/80f && person.gender == 'M' && person.relations.get(Relationship.Fiance).size() > 0)
-			{
-				//eventManager.marry(person, person.relations.get(Relationship.Fiance).get(0));
-			}
-			
 			if(person.ageYears() >= 18 && person.gender == 'M')
 			{
 				if(rand.nextDouble() > 0.95 && person.relations.get(Relationship.Spouse).size() == 0 && person.relations.get(Relationship.Fiance).size() == 0)
@@ -46,7 +43,8 @@ public class Town
 					{
 						if(person.attractionTo(canidate) > 4)
 						{
-							eventManager.propose(person, canidate);
+							eventManager.preformEvent(EventFactory.createEvent(EventType.Propose, eventManager, person, canidate));
+							//eventManager.propose(person, canidate);
 						}
 					}
 				}
@@ -54,20 +52,22 @@ public class Town
 			
 			if(rand.nextDouble() > 0.999 && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0)
 			{
-				eventManager.makePregnant(person.relations.get(Relationship.Spouse).get(0), person);
-				//eventManager.haveChild(person.relations.get(Relationship.Spouse).get(0), person);
+				eventManager.preformEvent(EventFactory.createEvent(EventType.Pregnant, eventManager, person.relations.get(Relationship.Spouse).get(0), person));
+				//eventManager.makePregnant(person.relations.get(Relationship.Spouse).get(0), person);
 			}
 			
 			if(person.ageYears() > 65 && (rand.nextDouble()) > 0.9999)
 			{
-				eventManager.death(person);
+				eventManager.preformEvent(EventFactory.createEvent(EventType.Death, eventManager, person));
+				//eventManager.death(person);
 				i--;
 			}
 		}
 		
 		if(rand.nextDouble() < 1/365.0)
 		{
-			eventManager.newPerson();
+			eventManager.preformEvent(EventFactory.createEvent(EventType.NewPerson, eventManager));
+			//eventManager.newPerson();
 		}
 	}
 	
