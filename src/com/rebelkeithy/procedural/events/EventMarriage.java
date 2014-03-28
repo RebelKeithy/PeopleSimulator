@@ -18,6 +18,9 @@ public class EventMarriage extends Event
 		involved.add(wife);
 		note = husband.fullName() + " married " + wife.fullName();
 		
+		husband.relations.get(Relationship.Fiance).remove(wife);
+		wife.relations.get(Relationship.Fiance).remove(husband);
+		
 		husband.relations.get(Relationship.Spouse).add(wife);
 		wife.relations.get(Relationship.Spouse).add(husband);
 		wife.lastName = husband.lastName;

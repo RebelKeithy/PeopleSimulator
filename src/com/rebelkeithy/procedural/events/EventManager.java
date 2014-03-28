@@ -23,9 +23,9 @@ public class EventManager
 		log.printLog();
 	}
 	
-	public void engage(Person man, Person woman)
+	public void propose(Person man, Person woman)
 	{
-		EventEngage event = new EventEngage(Calendar.instance().getDate());
+		EventPropose event = new EventPropose(Calendar.instance().getDate());
 		event.apply(man, woman);
 		log.addEvent(event);
 	}

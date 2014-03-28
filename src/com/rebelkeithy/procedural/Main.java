@@ -14,11 +14,13 @@ public class Main
 		PersonGenerator pgen = new PersonGenerator(gen);
 		Town town = new Town();
 		EventManager eventManager = new EventManager(pgen, town);
+		town.setEventManager(eventManager);
 		
 		gen.loadFirstNames(new File("firstNames.txt"));
 		gen.loadLastNames(new File("lastNames.txt"));
 
 		Calendar.instance().advance(365 * 1900);
+		/*
 		Person father = pgen.createRandomPerson('M');
 		Person mother = pgen.createRandomPerson('F');
 		town.addPerson(father);
@@ -33,10 +35,36 @@ public class Main
 		Calendar.instance().advance((int) (365*10 + 365 * Math.random() * 3));
 		Calendar.instance().advance((int) (365*30 + 365 * Math.random() * 10));
 		eventManager.death(father);
+		*/
 		
-		town.printPeople();
+		Person[] initialPeople = new Person[20];
+		for(int i = 0; i < 20; i++)
+		{
+			initialPeople[i] = pgen.createRandomPerson();
+			town.addPerson(initialPeople[i]);
+			Calendar.instance().advance((int) (365*Math.random()));
+		}
+
+		Calendar.instance().advance((int) (365*(16 + Math.random() * 10)));
+		for(int i = 0; i < 365 * 100; i++)
+		{
+			if(i % 365 == 0)
+				System.out.println("Year: " + i/365);
+			Calendar.instance().advance();
+			town.timeStep(1);
+		}
+		
+		//town.printPeople();
+
+		for(int i = 0; i < 10; i++)
+		{
+			System.out.println(initialPeople[i]);
+		}
 		System.out.println();
 		eventManager.printLog();
+		System.out.println("Final Population " + town.population());
+		System.out.println("Male: " + town.population('M'));
+		System.out.println("Female: " + town.population('F'));
 		
 		/*
 		father.addRelation(Relationship.Spouse, mother);

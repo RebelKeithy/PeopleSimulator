@@ -23,12 +23,14 @@ public class Person
 	public Genome attraction;
 	
 	public Map<Relationship, List<Person>> relations;
+	public Map<Person, Integer> friendships;
 	
 	public Person()
 	{
 		relations = new HashMap<Relationship, List<Person>>();
 		for(Relationship relation : Relationship.values())
 			relations.put(relation, new ArrayList<Person>());
+		friendships = new HashMap<Person, Integer>();
 	}
 	
 	public void addRelation(Relationship relation, Person person)
@@ -44,6 +46,17 @@ public class Person
 		relatives.add(person);
 	}
 	
+	public void effectFriendship(Person person, int amount)
+	{
+		if(!friendships.containsKey(person))
+		{
+			friendships.put(person, amount);
+		}
+		
+		int friendship = friendships.get(person);
+		friendships.put(person, friendship + amount);
+	}
+	
 	public float attractionTo(Person person)
 	{
 		float sum = ((AttractivenessGenes)attraction).atrib1.value() + ((AttractivenessGenes)attraction).atrib2.value() + ((AttractivenessGenes)attraction).atrib3.value();
@@ -55,6 +68,9 @@ public class Person
 		
 		baseAttraction -= Math.pow((3*(birthDate - person.birthDate))/((birthDate + person.birthDate)/2), 2);
 		
+		if(friendships.containsKey(person))
+			baseAttraction += friendships.get(person);
+		
 		return baseAttraction;
 	}
 	
@@ -63,7 +79,7 @@ public class Person
 	{
 		String ret = "------------------------------------------------\r\n";
 		ret += "Name: \t\t" + fullName() + "\r\n";
-		ret += "Age: \t\t" + ((Calendar.instance().getDate() - this.birthDate) / 365) + "\r\n";
+		ret += "Age: \t\t" + ageYears() + "\r\n";
 		ret += "Gender: \t" + gender + "\r\n";
 		ret += "Hair Color: \t" + hairColor + " " + hairColor.geneString() + "\r\n";
 		ret += "Eye Color: \t" + eyeColor + " " + eyeColor.geneString() + "\r\n";
@@ -88,5 +104,25 @@ public class Person
 	public String fullName() 
 	{
 		return firstName + " " + lastName;
+	}
+
+	public int ageYears() 
+	{
+		return (Calendar.instance().getDate() - this.birthDate) / 365;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return fullName().hashCode();
+	}
+
+	public boolean isRelated(Person canidate) 
+	{
+		for(Relationship relation : Relationship.values())
+			if(relations.get(relation).contains(canidate))
+				return true;
+		
+		return false;
 	}
 }
