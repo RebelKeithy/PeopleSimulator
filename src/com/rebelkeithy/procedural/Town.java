@@ -1,23 +1,30 @@
 package com.rebelkeithy.procedural;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 import com.rebelkeithy.procedural.events.EventFactory;
 import com.rebelkeithy.procedural.events.EventManager;
+import com.rebelkeithy.procedural.events.EventSickness;
 import com.rebelkeithy.procedural.events.EventType;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.Relationship;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 public class Town
 {
 	private ArrayList<Person> people;
+	private ArrayList<Person> deceased;
+	private Map<Integer, Integer> mortalityRate;
 	private EventManager eventManager;
 	private Random rand = new Random();
 	
 	public Town()
 	{
 		people = new ArrayList<Person>();
+		deceased = new ArrayList<Person>();
+		mortalityRate = new HashMap<Integer, Integer>();
 	}
 
 	public void setEventManager(EventManager eventManager) 
@@ -50,7 +57,7 @@ public class Town
 				}
 			}
 			
-			if(rand.nextDouble() > 0.999 && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0)
+			if(rand.nextDouble() < 1/(2*365.0) && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0 && person.relations.get(Relationship.Spouse).get(0).isAlive())
 			{
 				eventManager.preformEvent(EventFactory.createEvent(EventType.Pregnant, eventManager, person.relations.get(Relationship.Spouse).get(0), person));
 				//eventManager.makePregnant(person.relations.get(Relationship.Spouse).get(0), person);
@@ -62,11 +69,16 @@ public class Town
 				//eventManager.death(person);
 				i--;
 			}
+			
+			if(rand.nextDouble() < 1/(2.0*365.0))
+			{
+				eventManager.preformEvent(new EventSickness(eventManager, Calendar.instance().getDate(), person, 0));
+			}
 		}
 		
 		if(rand.nextDouble() < 1/365.0)
 		{
-			eventManager.preformEvent(EventFactory.createEvent(EventType.NewPerson, eventManager));
+			//eventManager.preformEvent(EventFactory.createEvent(EventType.NewPerson, eventManager));
 			//eventManager.newPerson();
 		}
 	}
@@ -74,6 +86,35 @@ public class Town
 	public void addPerson(Person person)
 	{
 		people.add(person);
+	}
+	
+	public void killPerson(Person person)
+	{
+		if(people.contains(person))
+		{
+			people.remove(person);
+			deceased.add(person);
+			int age = person.ageYears();
+			if(mortalityRate.containsKey(age))
+			{
+				int count = mortalityRate.get(age);
+				mortalityRate.put(age, count + 1);
+			}
+			else
+			{
+				mortalityRate.put(age, 1);
+			}
+		}
+	}
+	
+	public void printMortalityRate()
+	{
+		int totalDeaths = deceased.size();
+		for(int age : mortalityRate.keySet())
+		{
+			int deaths = mortalityRate.get(age);
+			System.out.println(age + ": " + (deaths/(float)totalDeaths));
+		}
 	}
 
 	public void removePerson(Person person) 
@@ -103,5 +144,69 @@ public class Town
 		{
 			System.out.println(person);
 		}
+	}
+
+	public void printPopulation() 
+	{
+		for(Person person : people)
+		{
+			System.out.println(person.fullName());
+		}
+	}
+
+	public String[] getPopulation() 
+	{
+		String[] pop = new String[people.size()];
+		
+		for(int i = 0; i < people.size(); i++)
+		{
+			pop[i] = people.get(i).fullName();
+		}
+		
+		return pop;
+	}
+	
+	public String[] getAllPeople()
+	{
+		String[] pop = new String[people.size() + deceased.size()];
+		
+		for(int i = 0; i < people.size(); i++)
+		{
+			pop[i] = people.get(i).fullName();
+		}
+		
+		for(int i = 0; i < deceased.size(); i++)
+		{
+			pop[i+people.size()] = deceased.get(i).fullName();
+		}
+		
+		return pop;
+	}
+
+	public Person getPerson(String fullname) 
+	{
+		for(Person person : people)
+		{
+			if(person.fullName().equals(fullname))
+			{
+				return person;
+			}
+		}
+
+		for(Person person : deceased)
+		{
+			if(person.fullName().equals(fullname))
+			{
+				return person;
+			}
+		}
+		
+		
+		return null;
+	}
+
+	public EventManager getEventManager() 
+	{
+		return eventManager;
 	}
 }

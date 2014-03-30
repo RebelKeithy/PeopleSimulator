@@ -28,4 +28,9 @@ public class Event
 	{
 		return date;
 	}
+	
+	public String getNote()
+	{
+		return note;
+	}
 }

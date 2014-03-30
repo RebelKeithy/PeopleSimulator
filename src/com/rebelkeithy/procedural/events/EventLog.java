@@ -44,4 +44,19 @@ public class EventLog
 			}
 		}
 	}
+
+	public Event[] getEventsByPerson(Person person) 
+	{
+		List<Event> returnEvents = new ArrayList<Event>();
+		
+		for(Event event : events)
+		{
+			if(event.involved.contains(person))
+			{
+				returnEvents.add(event);
+			}
+		}
+		
+		return returnEvents.toArray(new Event[returnEvents.size()]);
+	}
 }

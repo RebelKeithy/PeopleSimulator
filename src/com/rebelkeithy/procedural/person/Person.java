@@ -14,6 +14,7 @@ public class Person
 	public String firstName;
 	public String lastName;
 	public int birthDate;
+	public int deathDate;
 	
 	public char gender;
 	public Genome height;
@@ -33,6 +34,7 @@ public class Person
 		for(Relationship relation : Relationship.values())
 			relations.put(relation, new ArrayList<Person>());
 		friendships = new HashMap<Person, Integer>();
+		deathDate = -1;
 	}
 	
 	public void addRelation(Relationship relation, Person person)
@@ -84,6 +86,11 @@ public class Person
 		this.pregnant = pregnant;
 	}
 	
+	public boolean isAlive()
+	{
+		return deathDate == -1;
+	}
+	
 	public boolean isPregnant()
 	{
 		return pregnant && gender == 'F';
@@ -99,7 +106,7 @@ public class Person
 	{
 		String ret = "------------------------------------------------\r\n";
 		ret += "Name: \t\t" + fullName() + "\r\n";
-		ret += "Age: \t\t" + ageYears() + "\r\n";
+		ret += "Age: \t\t" + ageYears() + (isAlive() ? "" : " (deceased)") + "\r\n";
 		ret += "Gender: \t" + gender + "\r\n";
 		ret += "Hair Color: \t" + hairColor + " " + hairColor.geneString() + "\r\n";
 		ret += "Eye Color: \t" + eyeColor + " " + eyeColor.geneString() + "\r\n";
@@ -128,7 +135,10 @@ public class Person
 
 	public int ageYears() 
 	{
-		return (Calendar.instance().getDate() - this.birthDate) / 365;
+		if(deathDate == -1)
+			return (Calendar.instance().getDate() - this.birthDate) / 365;
+		
+		return (deathDate - this.birthDate) / 365;
 	}
 	
 	@Override

@@ -5,7 +5,7 @@ import com.rebelkeithy.procedural.person.Person;
 
 public class EventDeath extends Event
 {
-	Person person;
+	private Person person;
 
 	public EventDeath(EventManager eventManager, int date, Person person) 
 	{
@@ -15,7 +15,8 @@ public class EventDeath extends Event
 	
 	public void apply()
 	{
-		eventManager.town.removePerson(person);
+		eventManager.town.killPerson(person);
+		person.deathDate = Calendar.instance().getDate();
 		
 		involved.add(person);
 		this.note = person.fullName() + " died at the age of " + ((Calendar.instance().getDate() - person.birthDate)/365);

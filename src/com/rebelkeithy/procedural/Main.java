@@ -3,6 +3,7 @@ package com.rebelkeithy.procedural;
 import java.io.File;
 
 import com.rebelkeithy.procedural.events.EventManager;
+import com.rebelkeithy.procedural.gui.Gui;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.PersonGenerator;
 
@@ -46,7 +47,7 @@ public class Main
 		}
 
 		Calendar.instance().advance((int) (365*(16 + Math.random() * 10)));
-		for(int i = 0; i < 365 * 70; i++)
+		for(int i = 0; i < 365 * 80; i++)
 		{
 			if(i % 365 == 0)
 				System.out.println("Year: " + i/365);
@@ -55,11 +56,6 @@ public class Main
 		}
 		
 		//town.printPeople();
-
-		for(int i = 0; i < 20; i++)
-		{
-			System.out.println(initialPeople[i]);
-		}
 		System.out.println();
 		eventManager.printLog();
 		System.out.println("Final Population " + town.population());
@@ -69,6 +65,22 @@ public class Main
 		System.out.println();
 		System.out.println("Event Log of " + initialPeople[0].fullName());
 		eventManager.printLogRelatingTo(initialPeople[0]);
+		
+		//System.out.println();
+		//System.out.println("Town Population");
+		//town.printPopulation();
+		
+		//System.out.println();
+		//System.out.println("Mortality Rate");
+		//town.printMortalityRate();
+
+		/*
+		for(int i = 0; i < 20; i++)
+		{
+			System.out.println(initialPeople[i]);
+		}
+		*/
+		
 		/*
 		father.addRelation(Relationship.Spouse, mother);
 		mother.addRelation(Relationship.Spouse, father);
@@ -84,6 +96,7 @@ public class Main
 		System.out.println("Attraction of mother->father: " + mother.attractionTo(father));
 		*/
 		
-		
+		Gui gui = new Gui(town);
+		gui.setVisible(true);
 	}
 }

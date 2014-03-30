@@ -44,6 +44,11 @@ public class EventManager
 		log.printLogRelatingTo(person);
 	}
 	
+	public Event[] getEventsByPerson(Person person)
+	{
+		return log.getEventsByPerson(person);
+	}
+	
 	public void preformEvent(Event event)
 	{
 		event.apply();
