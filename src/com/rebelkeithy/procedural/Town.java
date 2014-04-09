@@ -166,7 +166,7 @@ public class Town
 		return pop;
 	}
 	
-	public String[] getAllPeople()
+	public String[] getAllPeopleNames()
 	{
 		String[] pop = new String[people.size() + deceased.size()];
 		
@@ -181,6 +181,23 @@ public class Town
 		}
 		
 		return pop;
+	}
+	
+	public Person[] getAllPeople()
+	{
+	    Person[] pop = new Person[people.size() + deceased.size()];
+
+        for(int i = 0; i < people.size(); i++)
+        {
+            pop[i] = people.get(i);
+        }
+        
+        for(int i = 0; i < deceased.size(); i++)
+        {
+            pop[i+people.size()] = deceased.get(i);
+        }
+	    
+        return pop;
 	}
 
 	public Person getPerson(String fullname) 

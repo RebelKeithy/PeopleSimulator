@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,10 +27,13 @@ import com.rebelkeithy.procedural.person.Relationship;
 
 public class Gui extends JFrame implements ListSelectionListener, ActionListener
 {
-	Town town;
+    private static final long serialVersionUID = 1L;
+
+    Town town;
 	
-	String[] people;
-	JList<String> list;
+	String[] peopleNames;
+	Person[] people;
+	JList<Person> list;
 	
 	JLabel personName;
 	JLabel lAge;
@@ -40,7 +42,7 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 	JLabel lEyeColor;
 	JLabel lHairColor;
 	JLabel lHeight;
-	JList<String> relations;
+	JList<Person> relations;
 	
 	JList<String> eventList;
 	JTextArea eventText;
@@ -69,16 +71,21 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		//panel.setLayout(new BorderLayout());
 		//panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
+		peopleNames = town.getAllPeopleNames();
 		people = town.getAllPeople();
 		
-		list = new JList<String>(people);
+		list = new JList<Person>(people);
+		list.setCellRenderer(new PersonListRenderer());
 		list.setVisible(true);
 		list.addListSelectionListener(this);
 		
 		JScrollPane pane = new JScrollPane();
 		pane.getViewport().add(list);
 		pane.setPreferredSize(new Dimension(250, 200));
-		
+
+        search = new JTextField("");
+        search.addActionListener(this);
+        search.setMaximumSize(new Dimension(Integer.MAX_VALUE, search.getPreferredSize().height));
 		personName = new JLabel("Name");
 		lAge = new JLabel("");
 		lBirth = new JLabel("");
@@ -86,13 +93,12 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		lEyeColor = new JLabel("");
 		lHairColor = new JLabel("");
 		lHeight = new JLabel("");
-		relations = new JList<String>();
+		relations = new JList<Person>();
+		relations.setCellRenderer(new PersonRelationListRenderer());
+		relations.addMouseListener(new PersonClickBehavior(this));
 		eventList = new JList<String>();
 		eventList.addListSelectionListener(this);
 		eventText = new JTextArea("Blank Text");
-		search = new JTextField("");
-		search.addActionListener(this);
-		search.setMaximumSize(new Dimension(Integer.MAX_VALUE, search.getPreferredSize().height));
 		
 
 		leftPanel.add(search);
@@ -144,41 +150,8 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		    {
 		        if (list.getSelectedIndex() != -1)
 		        {
-		        	String name = list.getSelectedValue();
-		        	Person person = town.getPerson(name);
-		            personName.setText(person.fullName());
-		            lAge.setText("Age: " + person.ageYears());
-		            lBirth.setText("Born: " + Utils.formatDate(person.birthDate));
-		            if(person.isAlive())
-		            	lDeath.setText("Died: N/A");
-		            else
-		            	lDeath.setText("Died: " + Utils.formatDate(person.deathDate));
-		            lEyeColor.setText("Eye Color: " + person.eyeColor);
-		            lHairColor.setText("Hair Color: " + person.hairColor);
-		            lHeight.setText("Height: " + person.height);
-		            
-		            Vector<String> listValues = new Vector<String>();
-		            for(Relationship rel : Relationship.values())
-		            {
-		            	List<Person> rels = person.relations.get(rel);
-		            	for(Person p : rels)
-		            	{
-		            		listValues.add(rel.name(p.gender) + ": " + p.fullName());
-		            	}
-		            }
-		            
-		            relations.setListData(listValues);
-		            
-		            events = town.getEventManager().getEventsByPerson(person);
-		            String[] data = new String[events.length];
-		            
-		            for(int i = 0; i < events.length; i++)
-		            {
-		            	data[i] = Utils.formatDate(events[i].getDate()) + ": " +  events[i].getNote();
-		            }
-		            
-		            
-		            eventList.setListData(data);
+		        	Person person = list.getSelectedValue();
+		            setPerson(person);
 		        }
 		    }
 			
@@ -200,23 +173,67 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 	{
 		if(event.getSource() == search)
 		{
-			if(search.getText().length() > 0)
-			{
-				Vector<String>subset = new Vector<String>();
-				for(String name : people)
-				{
-					if(name.contains(search.getText()))
-					{
-						subset.add(name);
-					}
-				}
-				
-				list.setListData(subset);
-			}
-			else
-			{
-				list.setListData(people);
-			}
+			updateSearch();
 		}
 	}
+
+    public void updateSearch()
+    {
+        if(search.getText().length() > 0)
+        {
+            Vector<Person>subset = new Vector<Person>();
+            for(Person person : people)
+            {
+                if(person.fullName().contains(search.getText()))
+                {
+                    subset.add(person);
+                }
+            }
+            
+            list.setListData(subset);
+        }
+        else
+        {
+            list.setListData(people);
+        }
+    }
+    
+    public void setPerson(Person person)
+    {
+        personName.setText(person.fullName());
+        lAge.setText("Age: " + person.ageYears());
+        lBirth.setText("Born: " + Utils.formatDate(person.birthDate));
+        if(person.isAlive())
+            lDeath.setText("Died: N/A");
+        else
+            lDeath.setText("Died: " + Utils.formatDate(person.deathDate));
+        lEyeColor.setText("Eye Color: " + person.eyeColor);
+        lHairColor.setText("Hair Color: " + person.hairColor);
+        lHeight.setText("Height: " + person.height);
+        
+        Vector<Person> listValues = new Vector<Person>();
+        for(Relationship rel : Relationship.values())
+        {
+            List<Person> rels = person.relations.get(rel);
+            for(Person p : rels)
+            {
+                //listValues.add(rel.name(p.gender) + ": " + p.fullName());
+                listValues.add(p);
+            }
+        }
+        
+        relations.setListData(listValues);
+        ((PersonRelationListRenderer)(relations.getCellRenderer())).setRelative(person);
+        
+        events = town.getEventManager().getEventsByPerson(person);
+        String[] data = new String[events.length];
+        
+        for(int i = 0; i < events.length; i++)
+        {
+            data[i] = Utils.formatDate(events[i].getDate()) + ": " +  events[i].getNote();
+        }
+        
+        
+        eventList.setListData(data);
+    }
 }

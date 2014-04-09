@@ -26,7 +26,7 @@ public class EventManager
 	
 	public void timeStep()
 	{
-		while(!eventQueue.isEmpty() && eventQueue.peek().isRead())
+		while(!eventQueue.isEmpty() && eventQueue.peek().isReady())
 		{
 			Event event = eventQueue.poll().event;
 			event.apply();

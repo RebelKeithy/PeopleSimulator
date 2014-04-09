@@ -24,6 +24,11 @@ public class Event
 		
 	}
 	
+	public void setNote(String note)
+	{
+	    this.note = note;
+	}
+	
 	public int getDate()
 	{
 		return date;

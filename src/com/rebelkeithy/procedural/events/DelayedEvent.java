@@ -13,7 +13,7 @@ public class DelayedEvent implements Comparable<DelayedEvent>
 		this.date = date;
 	}
 	
-	public boolean isRead()
+	public boolean isReady()
 	{
 		return date <= Calendar.instance().getDate();
 	}

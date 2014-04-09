@@ -56,6 +56,7 @@ public class Main
 		}
 		
 		//town.printPeople();
+		/*
 		System.out.println();
 		eventManager.printLog();
 		System.out.println("Final Population " + town.population());
@@ -65,6 +66,7 @@ public class Main
 		System.out.println();
 		System.out.println("Event Log of " + initialPeople[0].fullName());
 		eventManager.printLogRelatingTo(initialPeople[0]);
+		*/
 		
 		//System.out.println();
 		//System.out.println("Town Population");

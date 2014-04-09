@@ -155,4 +155,17 @@ public class Person
 		
 		return false;
 	}
+
+    public Relationship getRelationTo(Person person)
+    {
+        for(Relationship rel : Relationship.values())
+        {
+            if(relations.get(rel).contains(person))
+            {
+                return rel;
+            }
+        }
+        
+        return null;
+    }
 }
