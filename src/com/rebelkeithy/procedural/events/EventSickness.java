@@ -25,7 +25,9 @@ public class EventSickness extends Event
 			note = person.fullName() + " contracted sickness";
 			
 			int nextStageDate = (int) (Calendar.instance().getDate() + 3 + Math.random() * 7);
-			eventManager.addDelayedEvent(new EventSickness(eventManager, nextStageDate, person, stage+1));
+            Event event = new EventSickness(eventManager, nextStageDate, person, stage+1);
+            event.setLog(false);
+            eventManager.addDelayedEvent(event);
 		}
 		else
 		{
@@ -35,16 +37,20 @@ public class EventSickness extends Event
 				if(Math.pow(Math.random(), stage/2) < 0.1)
 				{
 					note = person.fullName() + " is on the verge of death";
+					this.setLog(true);
 					eventManager.addDelayedEvent(new EventDeath(eventManager, nextStageDate, person));
 				}
 				else
 				{
 					note = person.fullName() + "'s sickness is worse";
-					eventManager.addDelayedEvent(new EventSickness(eventManager, nextStageDate, person, stage+1));
+					Event event = new EventSickness(eventManager, nextStageDate, person, stage+1);
+					event.setLog(false);
+					eventManager.addDelayedEvent(event);
 				}
 			}
 			else
 			{
+                this.setLog(true);
 				note = person.fullName() + "'s sickness is gone";
 			}
 		}

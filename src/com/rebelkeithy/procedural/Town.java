@@ -2,12 +2,15 @@ package com.rebelkeithy.procedural;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import com.rebelkeithy.procedural.events.EventFactory;
+import com.rebelkeithy.procedural.events.EventFriendship;
 import com.rebelkeithy.procedural.events.EventManager;
 import com.rebelkeithy.procedural.events.EventSickness;
+import com.rebelkeithy.procedural.events.EventStartSchool;
 import com.rebelkeithy.procedural.events.EventType;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.Relationship;
@@ -46,6 +49,14 @@ public class Town
 				{
 					int j = rand.nextInt(people.size());
 					Person canidate = people.get(j);
+					
+					if(person.friendships.size() > 0)
+					{
+					    int f = rand.nextInt(person.friendships.size());
+		                List<Person> friends = new ArrayList<Person>(person.friendships.keySet());
+					    canidate = friends.get(f);
+					}
+					
 					if(canidate.gender != person.gender && !person.isRelated(canidate) && canidate.ageYears() > 16 && canidate.relations.get(Relationship.Spouse).isEmpty())
 					{
 						if(person.attractionTo(canidate) > 4)
@@ -55,6 +66,31 @@ public class Town
 						}
 					}
 				}
+			}
+			
+			if(person.ageYears() > 4 && rand.nextDouble() < 1/(float)(10*person.friendships.size()))
+			{
+			    int j = rand.nextInt(people.size());
+			    Person randomPerson = people.get(j);
+			    
+			    if(!person.friendships.containsKey(randomPerson) && person != randomPerson && person.ageDiff(randomPerson) < 1)
+			    {
+			        eventManager.preformEvent(new EventFriendship(eventManager, Calendar.instance().getDate(), person, randomPerson));
+			    }
+			}
+			
+			// Update friendship
+			if(!person.friendships.isEmpty() && rand.nextDouble() > 1/(float)(100*person.friendships.size()))
+			{
+			    int j = rand.nextInt(person.friendships.size());
+			    List<Person> friends = new ArrayList<Person>(person.friendships.keySet());
+			    Person friend = friends.get(j);
+			    eventManager.preformEvent(new EventFriendship(eventManager, Calendar.instance().getDate(), person, friend));
+			}
+			
+			if(person.ageYears() == 5 && Calendar.instance().getDay() == 200)
+			{
+			    eventManager.preformEvent(new EventStartSchool(eventManager, Calendar.instance().getDate(), person));
 			}
 			
 			if(rand.nextDouble() < 1/(2*365.0) && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0 && person.relations.get(Relationship.Spouse).get(0).isAlive())

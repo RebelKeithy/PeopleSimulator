@@ -10,6 +10,7 @@ import com.rebelkeithy.procedural.person.genetics.AttractivenessGenes;
 import com.rebelkeithy.procedural.person.genetics.EyeColorGenes;
 import com.rebelkeithy.procedural.person.genetics.HairColorGenes;
 import com.rebelkeithy.procedural.person.genetics.HeightGenes;
+import com.rebelkeithy.procedural.person.genetics.IntelligenceGenes;
 
 public class PersonGenerator 
 {
@@ -42,6 +43,7 @@ public class PersonGenerator
 		person.height = new HeightGenes((byte)rand.nextInt(256));
 		person.attractiveness = new AttractivenessGenes((byte)rand.nextInt(256), (byte)rand.nextInt(256), (byte)rand.nextInt(256));
 		person.attraction = new AttractivenessGenes((byte)rand.nextInt(256), (byte)rand.nextInt(256), (byte)rand.nextInt(256));
+		person.intelligence = new IntelligenceGenes((byte)rand.nextInt(256));
 		person.firstName = ng.getRandomFirstName(person.gender);
 		person.lastName = ng.getRandomLastName(0.5f);
 		
@@ -63,6 +65,7 @@ public class PersonGenerator
 		child.height = father.height.combine(mother.height);
 		child.attractiveness = father.attractiveness.combine(mother.attractiveness);
 		child.attraction = father.attraction.combine(mother.attraction);
+		child.intelligence = father.intelligence.combine(mother.intelligence);
 		child.lastName = father.lastName;
 		child.firstName = ng.getRandomFirstName(child.gender);
 

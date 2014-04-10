@@ -3,6 +3,7 @@ package com.rebelkeithy.procedural;
 import java.io.File;
 
 import com.rebelkeithy.procedural.events.EventManager;
+import com.rebelkeithy.procedural.events.EventMarriage;
 import com.rebelkeithy.procedural.gui.Gui;
 import com.rebelkeithy.procedural.person.Person;
 import com.rebelkeithy.procedural.person.PersonGenerator;
@@ -38,8 +39,11 @@ public class Main
 		eventManager.death(father);
 		*/
 		
-		Person[] initialPeople = new Person[20];
-		for(int i = 0; i < 20; i++)
+		int years = 60;
+		int startingPeople = 20;
+		
+		Person[] initialPeople = new Person[startingPeople];
+		for(int i = 0; i < startingPeople; i++)
 		{
 			initialPeople[i] = pgen.createRandomPerson();
 			town.addPerson(initialPeople[i]);
@@ -47,7 +51,7 @@ public class Main
 		}
 
 		Calendar.instance().advance((int) (365*(16 + Math.random() * 10)));
-		for(int i = 0; i < 365 * 80; i++)
+		for(int i = 0; i < 365 * years; i++)
 		{
 			if(i % 365 == 0)
 				System.out.println("Year: " + i/365);
@@ -97,6 +101,9 @@ public class Main
 		System.out.println("Attraction of father->mother: " + father.attractionTo(mother));
 		System.out.println("Attraction of mother->father: " + mother.attractionTo(father));
 		*/
+		
+		System.out.println("Married " + EventMarriage.married);
+        System.out.println("Unmarried " + EventMarriage.unmarried);
 		
 		Gui gui = new Gui(town);
 		gui.setVisible(true);

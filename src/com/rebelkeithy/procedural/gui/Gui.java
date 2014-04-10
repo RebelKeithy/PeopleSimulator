@@ -42,10 +42,12 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 	JLabel lEyeColor;
 	JLabel lHairColor;
 	JLabel lHeight;
+	JLabel lInt;
+	JLabel lFriends;
 	
 	JList<Person> relations;
-	JTextField father;
-	JTextField mother;
+	JList<Person> father;
+	JList<Person> mother;
 	
 	JList<String> eventList;
 	JTextArea eventText;
@@ -96,16 +98,20 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		lEyeColor = new JLabel("");
 		lHairColor = new JLabel("");
 		lHeight = new JLabel("");
+		lInt = new JLabel("");
+		lFriends = new JLabel("");
 		
 		relations = new JList<Person>();
 		relations.setCellRenderer(new PersonRelationListRenderer());
 		relations.addMouseListener(new PersonClickBehavior(this));
-		father = new JTextField();
-		father.setEditable(false);
-		father.setMaximumSize(new Dimension(Integer.MAX_VALUE, father.getPreferredSize().height));
-		mother = new JTextField();
-		mother.setEditable(false);
-		mother.setMaximumSize(new Dimension(Integer.MAX_VALUE, mother.getPreferredSize().height));
+		father = new JList<Person>();
+		father.setCellRenderer(new PersonListRenderer());
+        father.addMouseListener(new PersonClickBehavior(this));
+		//father.setMaximumSize(new Dimension(Integer.MAX_VALUE, father.getPreferredSize().height));
+		mother = new JList<Person>();
+		mother.setCellRenderer(new PersonListRenderer());
+        mother.addMouseListener(new PersonClickBehavior(this));
+		//mother.setMaximumSize(new Dimension(Integer.MAX_VALUE, mother.getPreferredSize().height));
 		
 		eventList = new JList<String>();
 		eventList.addListSelectionListener(this);
@@ -124,6 +130,8 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		personPanel.add(lEyeColor);
 		personPanel.add(lHairColor);
 		personPanel.add(lHeight);
+		personPanel.add(lInt);
+		personPanel.add(lFriends);
 		personPanel.add(relations);
 		
 		
@@ -241,10 +249,13 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
         lEyeColor.setText("Eye Color: " + person.eyeColor);
         lHairColor.setText("Hair Color: " + person.hairColor);
         lHeight.setText("Height: " + person.height);
+        lInt.setText("Intelligence: " + person.intelligence.geneString());
+        lFriends.setText("Friends: " + person.friendships.size());
         
-        
-        father.setText("");
-        mother.setText("");
+        //father.setText("");
+        //mother.setText("");
+        father.setListData(new Person[] {});
+        mother.setListData(new Person[] {});
         Vector<Person> listValues = new Vector<Person>();
         for(Relationship rel : Relationship.values())
         {
@@ -253,9 +264,9 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
             {
                 //listValues.add(rel.name(p.gender) + ": " + p.fullName());
                 if(rel == Relationship.Parent && p.gender == 'M')
-                	father.setText(p.fullName());
+                    father.setListData(new Person[] {p});
                 else if(rel == Relationship.Parent && p.gender == 'F')
-                	mother.setText(p.fullName());
+                    mother.setListData(new Person[] {p});
 
                 listValues.add(p);
                 

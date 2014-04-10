@@ -22,6 +22,7 @@ public class Person
 	public Genome hairColor;
 	public Genome attractiveness;
 	public Genome attraction;
+	public Genome intelligence;
 	
 	public boolean pregnant;
 	

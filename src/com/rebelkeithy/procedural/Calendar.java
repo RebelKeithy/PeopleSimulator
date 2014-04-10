@@ -30,4 +30,9 @@ public class Calendar
 	{
 		return date;
 	}
+
+    public int getDay()
+    {
+        return date%365;
+    }
 }

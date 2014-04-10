@@ -11,12 +11,23 @@ public class Event
 	protected int date;
 	protected String note;
 	protected List<Person> involved;
+	protected boolean log = true;
 	
 	public Event(EventManager eventManager, int date)
 	{
 		this.eventManager = eventManager;
 		this.date = date;
 		involved = new ArrayList<Person>();
+	}
+	
+	public void setLog(boolean log)
+	{
+	    this.log = log;
+	}
+	
+	public boolean shouldLog()
+	{
+	    return log;
 	}
 	
 	public void apply()
@@ -38,4 +49,9 @@ public class Event
 	{
 		return note;
 	}
+
+    public boolean canApply()
+    {
+        return true;
+    }
 }

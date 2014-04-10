@@ -29,8 +29,12 @@ public class EventManager
 		while(!eventQueue.isEmpty() && eventQueue.peek().isReady())
 		{
 			Event event = eventQueue.poll().event;
-			event.apply();
-			log.addEvent(event);
+			if(event.canApply())
+			{
+    			event.apply();
+    			if(event.shouldLog())
+    			    log.addEvent(event);
+			}
 		}
 	}
 	
@@ -52,35 +56,40 @@ public class EventManager
 	public void preformEvent(Event event)
 	{
 		event.apply();
-		log.addEvent(event);
+		if(event.shouldLog())
+		    log.addEvent(event);
 	}
 	
 	public void propose(Person man, Person woman)
 	{
 		EventPropose event = new EventPropose(this, Calendar.instance().getDate(), man, woman);
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 	
 	public void marry(Person husband, Person wife)
 	{
 		EventMarriage event = new EventMarriage(this, Calendar.instance().getDate(), husband, wife);
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 	
 	public void haveChild(Person father, Person mother)
 	{
 		EventChild event = new EventChild(this, Calendar.instance().getDate(), father, mother);
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 	
 	public void death(Person person)
 	{
 		EventDeath event = new EventDeath(this, Calendar.instance().getDate(), person);
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 
 	public void addDelayedEvent(Event event) 
@@ -92,12 +101,14 @@ public class EventManager
 	{
 		Event event = new EventNewPerson(this, Calendar.instance().getDate());
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 
 	public void makePregnant(Person father, Person mother) {
 		Event event = new EventPregnant(this, Calendar.instance().getDate(), father, mother);
 		event.apply();
-		log.addEvent(event);
+        if(event.shouldLog())
+            log.addEvent(event);
 	}
 }

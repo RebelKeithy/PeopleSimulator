@@ -10,6 +10,9 @@ public class EventMarriage extends Event
 	private Person husband;
 	private Person wife;
 	
+	public static int married = 0;
+	public static int unmarried = 0;
+	
 	public EventMarriage(EventManager eventManager, int date, Person husband, Person wife) 
 	{
 		super(eventManager, date);
@@ -22,6 +25,8 @@ public class EventMarriage extends Event
 		involved.add(husband);
 		involved.add(wife);
 		note = husband.fullName() + " married " + wife.fullName();
+		
+		//EventMarriage.married += 2;
 		
 		husband.relations.get(Relationship.Fiance).remove(wife);
 		wife.relations.get(Relationship.Fiance).remove(husband);
