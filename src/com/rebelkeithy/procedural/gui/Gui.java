@@ -42,7 +42,10 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 	JLabel lEyeColor;
 	JLabel lHairColor;
 	JLabel lHeight;
+	
 	JList<Person> relations;
+	JTextField father;
+	JTextField mother;
 	
 	JList<String> eventList;
 	JTextArea eventText;
@@ -93,9 +96,17 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		lEyeColor = new JLabel("");
 		lHairColor = new JLabel("");
 		lHeight = new JLabel("");
+		
 		relations = new JList<Person>();
 		relations.setCellRenderer(new PersonRelationListRenderer());
 		relations.addMouseListener(new PersonClickBehavior(this));
+		father = new JTextField();
+		father.setEditable(false);
+		father.setMaximumSize(new Dimension(Integer.MAX_VALUE, father.getPreferredSize().height));
+		mother = new JTextField();
+		mother.setEditable(false);
+		mother.setMaximumSize(new Dimension(Integer.MAX_VALUE, mother.getPreferredSize().height));
+		
 		eventList = new JList<String>();
 		eventList.addListSelectionListener(this);
 		eventText = new JTextArea("Blank Text");
@@ -120,9 +131,29 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
 		eventPanel.setLayout(new BoxLayout(eventPanel, BoxLayout.PAGE_AXIS));
 		
 		JPanel familyPanel = new JPanel();
+		familyPanel.setLayout(new BoxLayout(familyPanel, BoxLayout.PAGE_AXIS));
 		
 		JScrollPane familyScrollPane = new JScrollPane();
 		familyScrollPane.getViewport().add(relations);
+		
+		JPanel parentPanel = new JPanel();
+		
+		JPanel fatherPanel = new JPanel();
+		
+		JLabel fatherLabel = new JLabel("Father");
+		fatherPanel.add(fatherLabel);
+		fatherPanel.add(father);
+		
+		JPanel motherPanel = new JPanel();
+		
+		JLabel motherLabel = new JLabel("Mother");
+		motherPanel.add(motherLabel);
+		motherPanel.add(mother);
+		
+		parentPanel.add(fatherPanel);
+		parentPanel.add(motherPanel);
+		
+		familyPanel.add(parentPanel);
 		familyPanel.add(familyScrollPane);
 		
 		JScrollPane eventScrollPane = new JScrollPane();
@@ -211,6 +242,9 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
         lHairColor.setText("Hair Color: " + person.hairColor);
         lHeight.setText("Height: " + person.height);
         
+        
+        father.setText("");
+        mother.setText("");
         Vector<Person> listValues = new Vector<Person>();
         for(Relationship rel : Relationship.values())
         {
@@ -218,7 +252,14 @@ public class Gui extends JFrame implements ListSelectionListener, ActionListener
             for(Person p : rels)
             {
                 //listValues.add(rel.name(p.gender) + ": " + p.fullName());
+                if(rel == Relationship.Parent && p.gender == 'M')
+                	father.setText(p.fullName());
+                else if(rel == Relationship.Parent && p.gender == 'F')
+                	mother.setText(p.fullName());
+
                 listValues.add(p);
+                
+                
             }
         }
         
