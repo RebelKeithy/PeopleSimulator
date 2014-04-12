@@ -2,6 +2,7 @@ package com.rebelkeithy.procedural;
 
 import java.io.File;
 
+import com.rebelkeithy.keithyutils.Profiler;
 import com.rebelkeithy.procedural.events.EventManager;
 import com.rebelkeithy.procedural.events.EventMarriage;
 import com.rebelkeithy.procedural.gui.Gui;
@@ -58,6 +59,8 @@ public class Main
 			Calendar.instance().advance();
 			town.timeStep(1);
 		}
+		
+		Profiler.instance().print();
 		
 		//town.printPeople();
 		/*

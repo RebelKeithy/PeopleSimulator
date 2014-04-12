@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.rebelkeithy.keithyutils.Profiler;
 import com.rebelkeithy.procedural.events.EventFactory;
 import com.rebelkeithy.procedural.events.EventFriendship;
 import com.rebelkeithy.procedural.events.EventManager;
@@ -43,6 +44,7 @@ public class Town
 		{
 			Person person = people.get(i);
 			
+			Profiler.instance().start("Finding Marriage");
 			if(person.ageYears() >= 18 && person.gender == 'M')
 			{
 				if(rand.nextDouble() > 0.95 && person.relations.get(Relationship.Spouse).size() == 0 && person.relations.get(Relationship.Fiance).size() == 0)
@@ -67,7 +69,9 @@ public class Town
 					}
 				}
 			}
+			Profiler.instance().stop("Finding Marriage");
 			
+			Profiler.instance().start("Finding Friends");
 			if(person.ageYears() > 4 && rand.nextDouble() < 1/(float)(10*person.friendships.size()))
 			{
 			    int j = rand.nextInt(people.size());
@@ -78,38 +82,53 @@ public class Town
 			        eventManager.preformEvent(new EventFriendship(eventManager, Calendar.instance().getDate(), person, randomPerson));
 			    }
 			}
+			Profiler.instance().stop("Finding Friends");
 			
 			// Update friendship
-			if(!person.friendships.isEmpty() && rand.nextDouble() > 1/(float)(100*person.friendships.size()))
+			/*
+			Profiler.instance().start("Updating Friend");
+			if(!person.friends.isEmpty() && rand.nextDouble() > 1/(float)(100*person.friendships.size()))
 			{
-			    int j = rand.nextInt(person.friendships.size());
+			    int j = rand.nextInt(person.friends.size());
+			    //Profiler.instance().start("Creating KeySet");
 			    List<Person> friends = new ArrayList<Person>(person.friendships.keySet());
-			    Person friend = friends.get(j);
+			    //Profiler.instance().stop("Creating KeySet");
+			    Person friend = person.friends.get(j);
 			    eventManager.preformEvent(new EventFriendship(eventManager, Calendar.instance().getDate(), person, friend));
 			}
+			Profiler.instance().stop("Updating Friend");
+			*/
 			
+			Profiler.instance().start("School Event");
 			if(person.ageYears() == 5 && Calendar.instance().getDay() == 200)
 			{
 			    eventManager.preformEvent(new EventStartSchool(eventManager, Calendar.instance().getDate(), person));
 			}
-			
+			Profiler.instance().stop("School Event");
+
+			Profiler.instance().start("Pregnant Event");
 			if(rand.nextDouble() < 1/(2*365.0) && person.gender == 'F' && !person.isPregnant() && person.ageYears() < 45 && person.relations.get(Relationship.Spouse).size() != 0 && person.relations.get(Relationship.Spouse).get(0).isAlive())
 			{
 				eventManager.preformEvent(EventFactory.createEvent(EventType.Pregnant, eventManager, person.relations.get(Relationship.Spouse).get(0), person));
 				//eventManager.makePregnant(person.relations.get(Relationship.Spouse).get(0), person);
 			}
-			
+			Profiler.instance().stop("Pregnant Event");
+
+			Profiler.instance().start("Death Event");
 			if(person.ageYears() > 65 && (rand.nextDouble()) > 0.9999)
 			{
 				eventManager.preformEvent(EventFactory.createEvent(EventType.Death, eventManager, person));
 				//eventManager.death(person);
 				i--;
 			}
-			
+			Profiler.instance().stop("Death Event");
+
+			Profiler.instance().start("Sickness Event");
 			if(rand.nextDouble() < 1/(2.0*365.0))
 			{
 				eventManager.preformEvent(new EventSickness(eventManager, Calendar.instance().getDate(), person, 0));
 			}
+			Profiler.instance().stop("Sickness Event");
 		}
 		
 		if(rand.nextDouble() < 1/365.0)

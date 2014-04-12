@@ -27,14 +27,16 @@ public class Person
 	public boolean pregnant;
 	
 	public Map<Relationship, List<Person>> relations;
-	public Map<Person, Integer> friendships;
+	public List<Person> friends;
+	public Map<Person, Friendship> friendships;
 	
 	public Person()
 	{
 		relations = new HashMap<Relationship, List<Person>>();
 		for(Relationship relation : Relationship.values())
 			relations.put(relation, new ArrayList<Person>());
-		friendships = new HashMap<Person, Integer>();
+		friends = new ArrayList<Person>();
+		friendships = new HashMap<Person, Friendship>();
 		deathDate = -1;
 	}
 	
@@ -55,11 +57,12 @@ public class Person
 	{
 		if(!friendships.containsKey(person))
 		{
-			friendships.put(person, amount);
+			friends.add(person);
+			friendships.put(person, new Friendship(amount));
 		}
 		
-		int friendship = friendships.get(person);
-		friendships.put(person, friendship + amount);
+		Friendship friendship = friendships.get(person);
+		friendship.addAmount(amount);
 	}
 	
 	public float attractionTo(Person person)
@@ -74,7 +77,7 @@ public class Person
 		baseAttraction -= Math.pow((3*(ageYears() - person.ageYears()))/((ageYears() + person.ageYears())/2.0), 2);
 		
 		if(friendships.containsKey(person))
-			baseAttraction += friendships.get(person);
+			baseAttraction += friendships.get(person).getCurrent()/200.0;
 		
 		return baseAttraction;
 	}

@@ -2,6 +2,7 @@ package com.rebelkeithy.procedural.events;
 
 import java.util.PriorityQueue;
 
+import com.rebelkeithy.keithyutils.Profiler;
 import com.rebelkeithy.procedural.Calendar;
 import com.rebelkeithy.procedural.Town;
 import com.rebelkeithy.procedural.person.Person;
@@ -26,6 +27,7 @@ public class EventManager
 	
 	public void timeStep()
 	{
+		Profiler.instance().start("Delayed Events");
 		while(!eventQueue.isEmpty() && eventQueue.peek().isReady())
 		{
 			Event event = eventQueue.poll().event;
@@ -36,6 +38,7 @@ public class EventManager
     			    log.addEvent(event);
 			}
 		}
+		Profiler.instance().stop("Delayed Events");
 	}
 	
 	public void printLog()

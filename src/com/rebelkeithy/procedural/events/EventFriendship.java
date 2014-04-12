@@ -1,5 +1,7 @@
 package com.rebelkeithy.procedural.events;
 
+import com.rebelkeithy.procedural.Calendar;
+import com.rebelkeithy.procedural.person.Friendship;
 import com.rebelkeithy.procedural.person.Person;
 
 public class EventFriendship extends Event
@@ -24,38 +26,44 @@ public class EventFriendship extends Event
         
         if(person.friendships.containsKey(other))
         {
-            int friendship = person.friendships.get(other);
+            int change = 0;
             
-            if(Math.random() > 0.25)
-                friendship++;
+            if(Math.random() > 0.025)
+            	change = 10;
             else
-                friendship--;
+            	change = -10;
             
+
+            person.effectFriendship(other, change);
+            other.effectFriendship(person, change);
+            Friendship friendship = person.friendships.get(other);
             
-            
-            if(friendship == 20)
+            if(friendship.getHighest() >= 20 && friendship.getPrev() < 20)
             {
-                note = person.fullName() + " and " + other.fullName() + " are good friends (" + friendship + ")";
+                note = person.fullName() + " and " + other.fullName() + " are good friends";// (" + friendship + ")";
                 this.setLog(true);
             }
-            if(friendship == 200)
+            if(friendship.getHighest() >= 200 && friendship.getPrev() < 200)
             {
-                note = person.fullName() + " and " + other.fullName() + " are best friends (" + friendship + ")";
+                note = person.fullName() + " and " + other.fullName() + " are best friends";// (" + friendship + ")";
                 this.setLog(true);
             }
-            
-            //note = person.fullName() + " and " + other.fullName() + " are friends (" + friendship + ")";
-            
-            person.friendships.put(other, friendship);
-            other.friendships.put(person, friendship);
         }
         else
         {
-            person.friendships.put(other, 1);
-            other.friendships.put(person, 1);
+        	person.effectFriendship(other, 1);
+        	other.effectFriendship(person, 1);
             
             note = person.fullName() + " and " + other.fullName() + " meet each other";
             this.setLog(true);
         }
+        
+        int nextInteractionDate = (int) (10 * (rand.nextGaussian() + 5));
+        eventManager.addDelayedEvent(new EventFriendship(eventManager, Calendar.instance().getDate() + nextInteractionDate, person, other));
+    }
+
+    public boolean canApply()
+    {
+        return person.isAlive() && other.isAlive();
     }
 }

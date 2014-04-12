@@ -21,7 +21,7 @@ public class EventPropose extends Event
 		involved.add(man);
 		involved.add(woman);
 		
-		if(woman.attractionTo(man) > 3 && woman.relations.get(Relationship.Spouse).isEmpty() && woman.relations.get(Relationship.Fiance).isEmpty())
+		if(woman.attractionTo(man) > 4 && woman.relations.get(Relationship.Spouse).isEmpty() && woman.relations.get(Relationship.Fiance).isEmpty())
 		{
 			man.relations.get(Relationship.Fiance).add(woman);
 			woman.relations.get(Relationship.Fiance).add(man);
@@ -35,7 +35,7 @@ public class EventPropose extends Event
 		{
 			note = man.fullName() + " proposed to " + woman.fullName() + " but was rejected";
 			note += " (attraction guy->girl: " + man.attractionTo(woman) + ", girl->guy: " + woman.attractionTo(man) + ")"; 
-			man.effectFriendship(woman, -2);
+			man.effectFriendship(woman, -200);
 		}
 	}
 }
